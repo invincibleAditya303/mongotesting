@@ -1,0 +1,34 @@
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+    "username": "shiva_prasad",
+    "password": "Invincible@303",
+    "name": "Shiva",
+    "gender": "Male"
+}
+###
+
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "username": "aditya_ammu",
+    "password": "Invincible@303"
+}
+###
+
+GET http://localhost:3000/categories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkaXR5YV9hbW11IiwibmFtZSI6IkFkaXR5YSIsImdlbmRlciI6Ik1hbGUiLCJpYXQiOjE3NDQ4MTg2MjAsImV4cCI6MTc0NzQxMDYyMH0.WsSnK95KIPZMGUn8ybpwdE7eHL-X5pHv5stR9fiDUTM
+###
+
+POST http://localhost:3000/categories
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkaXR5YV9hbW11IiwibmFtZSI6IkFkaXR5YSIsImdlbmRlciI6Ik1hbGUiLCJpYXQiOjE3NDQ4MTg2MjAsImV4cCI6MTc0NzQxMDYyMH0.WsSnK95KIPZMGUn8ybpwdE7eHL-X5pHv5stR9fiDUTM
+
+{
+    "categoryName": "Hats",
+    "itemCount": 100,
+    "categoryImage": "https://res.cloudinary.com/dtrjr55q7/image/upload/v1744824572/portrait-young-stylish-girl-model-casual-summer-clothes-brown-hat-with-natural-makeup-glasses-isolated_fp2ifm.jpg"
+}
+###
