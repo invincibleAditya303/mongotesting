@@ -58,14 +58,14 @@ app.post('/register', async (request, response) => {
         gender: `${gender}`
       })
       response.status(200)
-      response.send('User created Successfully')
+      response.json('User created Successfully')
     } else {
       response.status(400)
-      response.send('Password too short')
+      response.json('Password too short')
     }
   } else {
     response.status(400)
-    response.send('User already exists')
+    response.json('User already exists')
   }
 })
 
@@ -90,11 +90,11 @@ app.post('/login', async (request, response) => {
       response.json(jwtToken)
     } else {
       response.status(401)
-      response.send('Invalid Password')
+      response.json('Invalid Password')
     }
   } else {
     response.status(401)
-    response.send("User doesn't exist")
+    response.json("User doesn't exist")
   }
 })
 
@@ -109,12 +109,12 @@ const authenticationToken = async (request,response, next) => {
 
   if (jwtToken === undefined) {
     response.status(401)
-    response.send('Invalid JWT Token')
+    response.json('Invalid JWT Token')
   } else {
     jwt.verify(jwtToken, 'categories', async (error, payload) => {
       if (error) {
         response.status(401)
-        response.status('Invalid JWT Token')
+        response.json('Invalid JWT Token')
       } else {
         request.payload = payload
         next()
@@ -126,7 +126,7 @@ const authenticationToken = async (request,response, next) => {
 //GET all categories API
 app.get('/categories', authenticationToken, async (request, response) => {
   const categories = await db.collection('categories').find({}).toArray()
-  response.send(categories)
+  response.json(categories)
 })
 
 //Add New category API
@@ -141,9 +141,9 @@ app.post('/categories', authenticationToken, async(request, response) => {
       category_image: `${categoryImage}`
     })
     response.status(200)
-    response.send('Category successfully added')
+    response.json('Category successfully added')
   } else {
     response.status(400)
-    response.send('Category already exists')
+    response.json('Category already exists')
   }
 })
