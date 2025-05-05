@@ -11,7 +11,16 @@ app.use(cors({
 }))
 
 require('dotenv').config()
+const cloudinary = require('cloudinary').v2
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+})
+
+const multer = require('multer')
+const {CloudinaryStorage} = require('multer-storage-cloudinary')
 const {MongoClient} = require('mongodb')
 
 const uri = 'mongodb+srv://ammuaditya303:j95fCqhpotEWXqqf@cluster0.67stb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
@@ -19,6 +28,16 @@ const client = new MongoClient(uri)
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'categories',
+    allowed_formats: ['jpg', 'jpeg', 'png']
+  }
+})
+
+const upload = multer({storage: storage})
 
 //connecting to the server
 const connectToSever = async () => {
@@ -130,8 +149,9 @@ app.get('/categories', authenticationToken, async (request, response) => {
 })
 
 //Add New category API
-app.post('/categories', authenticationToken, async(request, response) => {
-  const {categoryName, itemCount, categoryImage} = request.body
+app.post('/categories', authenticationToken, upload.single('categoryImage'), async(request, response) => {
+  const {categoryName, itemCount} = request.body
+  const categoryImage = request.file.path
   const existingCategory = await db.collection('categories').findOne({category_name: `${categoryName}`})
 
   if (!existingCategory) {
