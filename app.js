@@ -187,7 +187,7 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
 
     if (request.file) {
       try {
-        cloudinary.uploader.destroy(existingCategory.category_image)
+        cloudinary.uploader.destroy(category.category_image)
         const result = await cloudinary.uploader.upload(request.file.path)
         categoryImage = result.secure_url
         console.log(typeof(categoryImage))
@@ -196,7 +196,7 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
       }
     }
 
-    await db.collection('categories').updateOne({_id: id}, {$set: {category_name: `${categoryName}`, category_image: categoryImage, item_count: itemCount}})
+    await db.collection('categories').updateOne({_id: id}, {$set: {category_name: `${categoryName}`, category_image: `${categoryImage}`, item_count: itemCount}})
     response.status(200)
     response.json(`Category updated successfully`, categoryImage)
   } else {
