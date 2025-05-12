@@ -6,8 +6,10 @@ const PORT = process.env.PORT || 3000
 app.use(express.json())
 
 app.use(cors({
-  origin: 'http://localhost:3000', // your frontend origin
-  credentials: true // if you're using cookies
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }))
 
 require('dotenv').config()
@@ -21,7 +23,7 @@ cloudinary.config({
 
 const multer = require('multer')
 const {CloudinaryStorage} = require('multer-storage-cloudinary')
-const {MongoClient} = require('mongodb')
+const {MongoClient, ObjectId} = require('mongodb')
 
 const uri = 'mongodb+srv://ammuaditya303:j95fCqhpotEWXqqf@cluster0.67stb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 const client = new MongoClient(uri)
@@ -165,5 +167,38 @@ app.post('/categories', authenticationToken, upload.single('categoryImage'), asy
   } else {
     response.status(400)
     response.json('Category already exists')
+  }
+})
+
+//Update Existing category API
+app.put('/categories/:categoryId', authenticationToken, upload.single('categoryImage'), async (request, response) => {
+  const {categoryId} = request.params
+  const id = new ObjectId(categoryId)
+
+  const category = await db.collection('categories').findOne({_id: id})
+
+  if (category !== undefined) {
+    const {
+      categoryName = category.category_name,
+      itemCount = category.item_count,
+    } = request.body
+
+    let categoryImage = category.category_image
+
+    if (request.file) {
+      try {
+        const result = await cloudinary.uploader.upload(request.file.path)
+        categoryImage = result.secure_url
+      } catch (error) {
+          return response.status(500).json({ error: error.message });
+      }
+    }
+
+    await db.collection('categories').updateOne({_id: id}, {$set: {category_name: `${categoryName}`, category_image: `${categoryImage}`, item_count: `${itemCount}`}})
+    response.status(200)
+    response.json('Category updated successfully')
+  } else {
+    response.status(400)
+    response.json('Category not found')
   }
 })
