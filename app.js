@@ -198,7 +198,7 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
 
     await db.collection('categories').updateOne({_id: id}, {$set: {category_name: `${categoryName}`, category_image: `${categoryImage}`, item_count: itemCount}})
     response.status(200)
-    response.json(`Category updated successfully`, categoryImage)
+    response.json(`Category updated successfully,  imageUrl: ${categoryImage}`)
   } else {
     response.status(400)
     response.json('Category not found')
