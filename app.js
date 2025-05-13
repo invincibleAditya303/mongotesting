@@ -192,13 +192,13 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
         categoryImage = result.secure_url
         console.log(typeof(categoryImage))
       } catch (error) {
-          return response.status(500).json({ error: error.message });
+          return response.status(500).json({ error: error.message, imageUrl: request.file.path });
       }
     }
 
     await db.collection('categories').updateOne({_id: id}, {$set: {category_name: `${categoryName}`, category_image: `${categoryImage}`, item_count: itemCount}})
     response.status(200)
-    response.json(`Category updated successfully,  imageU: ${request.file.path}`)
+    response.json(`Category updated successfully,  imageUrl: ${request.file.path}`)
 
   } else {
     response.status(400)
