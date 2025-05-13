@@ -185,7 +185,7 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
 
     let categoryImage = category.category_image
 
-    if (request.file.path !== undefined) {
+    if (request.file) {
       try {
         cloudinary.uploader.destroy(category.category_image, { invalidate: true })
         const result = await cloudinary.uploader.upload(request.file.path)
