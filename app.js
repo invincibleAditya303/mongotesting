@@ -185,7 +185,7 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
 
     let categoryImage = category.category_image
 
-    if (request.file) {
+    if (request.file.path) {
       try {
         cloudinary.uploader.destroy(category.category_image, { invalidate: true })
         const result = await cloudinary.uploader.upload(request.file.path)
@@ -198,7 +198,7 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
 
     await db.collection('categories').updateOne({_id: id}, {$set: {category_name: `${categoryName}`, category_image: `${categoryImage}`, item_count: itemCount}})
     response.status(200)
-    response.json(`Category updated successfully,  imageU: ${request.file}`)
+    response.json(`Category updated successfully,  imageU: ${request.file.path}`)
 
   } else {
     response.status(400)
