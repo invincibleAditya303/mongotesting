@@ -5,6 +5,11 @@ const PORT = process.env.PORT || 3000
 
 app.use(express.json())
 
+const allowedOrigins = [
+  'http://localhost:3000', // Local development
+  'https://mongocategories.onrender.com', // Production domain
+]
+
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
