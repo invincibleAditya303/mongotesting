@@ -183,10 +183,10 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
       itemCount = category.item_count,
     } = request.body
 
+    let categoryImage = category.category_image
+
       try {
-        const result = await cloudinary.uploader.upload(request.file.path)
-        const categoryImage = result.secure_url
-        console.log(typeof(categoryImage))
+        categoryImage = request.file.path
       } catch (error) {
           return response.status(500).json({ error: error.message});
       }
