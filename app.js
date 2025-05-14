@@ -188,7 +188,7 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
       try {
         categoryImage = request.file.path
       } catch (error) {
-          return response.status(500).json({ error: error.message});
+          return response.status(500).json(error.message);
       }
 
     await db.collection('categories').updateOne({_id: id}, {$set: {category_name: `${categoryName}`, category_image: `${categoryImage}`, item_count: itemCount}})
