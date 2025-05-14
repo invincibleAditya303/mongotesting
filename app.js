@@ -185,12 +185,14 @@ app.put('/categories/:categoryId', authenticationToken, upload.single('categoryI
 
     let categoryImage = category.category_image
 
+    if (request.file) {
       try {
-        categoryImage = request.file.path
+        const result = await cloudinary.uploader.upload(request.file.path)
+        categoryImage = result.secure_url
       } catch (error) {
           return response.status(500).json(error.message);
       }
-
+    }
     await db.collection('categories').updateOne({_id: id}, {$set: {category_name: `${categoryName}`, category_image: `${categoryImage}`, item_count: itemCount}})
     response.status(200)
     response.json(`Category updated successfully,  imageUrl: ${request.file}`)
